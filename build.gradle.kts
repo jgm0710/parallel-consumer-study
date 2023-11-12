@@ -29,6 +29,8 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
+    // https://mvnrepository.com/artifact/io.confluent.parallelconsumer/parallel-consumer-core
+    implementation("io.confluent.parallelconsumer:parallel-consumer-core:0.5.2.7")
 }
 
 tasks.withType<KotlinCompile> {
