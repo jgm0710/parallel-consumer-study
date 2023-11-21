@@ -51,6 +51,7 @@ class CoreApp(
                 "Concurrently processing a record: {}",
                 record,
             )
+            Thread.sleep(1000)
         }
         // end::example[]
     }
@@ -65,8 +66,8 @@ class CoreApp(
         // tag::exampleSetup[]
 
         val options = ParallelConsumerOptions.builder<String, String?>()
-            .ordering(ProcessingOrder.PARTITION) // <2>
-            .maxConcurrency(2) // <3>
+            .ordering(ProcessingOrder.KEY) // <2>
+            .maxConcurrency(10) // <3>
             .consumer(kafkaConsumer)
             .producer(kafkaProducer)
             .build()
