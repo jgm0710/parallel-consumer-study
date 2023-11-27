@@ -9,9 +9,11 @@ import org.springframework.kafka.core.ConsumerFactory
 import java.lang.reflect.Method
 
 class KafkaParallelListenerProcessor(
-    private val kafkaParallelConsumerFactory: KafkaParallelConsumerFactory<String, String>,
     private val kafkaConsumerFactory: ConsumerFactory<String, String>,
 ) : BeanPostProcessor, DisposableBean {
+
+    private val kafkaParallelConsumerFactory: KafkaParallelConsumerFactory<String, String> =
+        KafkaParallelConsumerFactory()
 
     private val consumers = mutableListOf<ParallelStreamProcessor<String, String>>()
 
