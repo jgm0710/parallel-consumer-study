@@ -1,6 +1,5 @@
 package com.example.parallelconsumerstudy.annotation
 
-import io.confluent.parallelconsumer.ParallelConsumerOptions
 import io.confluent.parallelconsumer.ParallelStreamProcessor
 import io.confluent.parallelconsumer.PollContext
 import org.springframework.beans.factory.DisposableBean
@@ -27,15 +26,19 @@ class KafkaParallelListenerProcessor(
         return bean
     }
 
-    private fun processKafkaParallelListenerMethod(bean: Any, method: Method, annotation: KafkaParallelListener) {
+    private fun processKafkaParallelListenerMethod(
+        bean: Any,
+        method: Method,
+        kafkaParallelListener: KafkaParallelListener,
+    ) {
         // KafkaParallelConsumerFactory를 사용하여 컨슈머 프로세서를 생성하고, poll 메서드에 메서드를 연결합니다.
         val consumerProcessor = kafkaParallelConsumerFactory.createConsumerProcessor(
             kafkaConsumerFactory = kafkaConsumerFactory,
-            ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
-            maxConcurrency = 0,
-            groupId = null,
-            clientIdPrefix = null,
-            clientIdSuffix = null,
+            ordering = kafkaParallelListener.ordering,
+            maxConcurrency = kafkaParallelListener.maxConcurrency,
+            groupId = kafkaParallelListener.groupId,
+            clientIdPrefix = kafkaParallelListener.clientIdPrefix,
+            clientIdSuffix = kafkaParallelListener.clientIdSuffix,
             properties = null,
         )
 
