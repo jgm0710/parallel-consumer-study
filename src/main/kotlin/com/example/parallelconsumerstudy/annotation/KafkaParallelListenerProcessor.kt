@@ -5,8 +5,10 @@ import io.confluent.parallelconsumer.PollContext
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.kafka.core.ConsumerFactory
+import org.springframework.stereotype.Component
 import java.lang.reflect.Method
 
+@Component
 class KafkaParallelListenerProcessor(
     private val kafkaConsumerFactory: ConsumerFactory<String, String>,
 ) : BeanPostProcessor, DisposableBean {
@@ -34,12 +36,12 @@ class KafkaParallelListenerProcessor(
         // KafkaParallelConsumerFactory를 사용하여 컨슈머 프로세서를 생성하고, poll 메서드에 메서드를 연결합니다.
         val consumerProcessor = kafkaParallelConsumerFactory.createConsumerProcessor(
             kafkaConsumerFactory = kafkaConsumerFactory,
+            topics = kafkaParallelListener.topics,
             ordering = kafkaParallelListener.ordering,
             maxConcurrency = kafkaParallelListener.maxConcurrency,
             groupId = kafkaParallelListener.groupId,
             clientIdPrefix = kafkaParallelListener.clientIdPrefix,
             clientIdSuffix = kafkaParallelListener.clientIdSuffix,
-            properties = null,
         )
 
         consumerProcessor.poll { recode: PollContext<String, String> ->

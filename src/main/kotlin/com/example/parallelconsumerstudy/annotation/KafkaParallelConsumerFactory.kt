@@ -9,6 +9,7 @@ class KafkaParallelConsumerFactory<K, V> {
 
     fun createConsumerProcessor(
         kafkaConsumerFactory: ConsumerFactory<K, V>,
+        topics: Array<String>,
         ordering: ParallelConsumerOptions.ProcessingOrder = ParallelConsumerOptions.ProcessingOrder.KEY,
         maxConcurrency: Int = 3,
         groupId: String? = null,
@@ -24,11 +25,14 @@ class KafkaParallelConsumerFactory<K, V> {
                     groupId,
                     clientIdPrefix,
                     clientIdSuffix,
-                    properties,
                 ),
             )
             .build()
 
-        return ParallelStreamProcessor.createEosStreamProcessor(options)
+        val eosStreamProcessor = ParallelStreamProcessor.createEosStreamProcessor(options)
+
+        eosStreamProcessor.subscribe(topics.toList())
+
+        return eosStreamProcessor
     }
 }
