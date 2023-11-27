@@ -6,4 +6,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping
 @Retention(AnnotationRetention.RUNTIME)
 @MessageMapping
 @MustBeDocumented
-annotation class KafkaParallelListener
+annotation class KafkaParallelListener{
+
+
+}
