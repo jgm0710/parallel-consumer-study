@@ -13,7 +13,7 @@ class SampleKafkaConsumer2 {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @KafkaListener(topics = ["hello-topic"], groupId = "sample2")
+//    @KafkaListener(topics = ["hello-topic"], groupId = "sample2")
     fun normalKafkaConsumer(consumerRecord: ConsumerRecord<String, String>) {
         val offset = consumerRecord.offset()
         val key = consumerRecord.key()
@@ -29,12 +29,12 @@ class SampleKafkaConsumer2 {
         log.info("End Thread Sleep. Key : $key , Offset : $offset")
     }
 
-//    @KafkaParallelListener(
-//        topics = ["hello-topic"],
-//        concurrency = 100,
-//        ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
-//        groupId = "test-group",
-//    )
+    @KafkaParallelListener(
+        topics = ["hello-topic"],
+        concurrency = 100,
+        ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
+        groupId = "test-group",
+    )
     fun sample(recode: PollContext<String, String>) {
         log.info("recode : $recode. value : ${recode.value()}")
         val offset = recode.offset()
@@ -46,7 +46,7 @@ class SampleKafkaConsumer2 {
         val l = offset % 10
 
 //        val threadSleepS = (10 - l) * 2
-        val threadSleepS = 1L
+        val threadSleepS = 100L
 
 //        if (Random.nextInt().absoluteValue % 3 == 0) {
 //            throw Exception("test exception")

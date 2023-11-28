@@ -2,6 +2,7 @@ package com.example.parallelconsumerstudy.sample
 
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import kotlin.math.absoluteValue
 import kotlin.random.Random
@@ -12,7 +13,9 @@ class SampleKafkaMessageSendController(
 ) {
 
     @GetMapping("/sample")
-    fun sample() {
-        kafkaTemplate.send("hello-topic", Random.nextInt().absoluteValue.toString(), "hihi")
+    fun sample(@RequestParam(defaultValue = "1") publishCount: Int) {
+        repeat(publishCount) {
+            kafkaTemplate.send("hello-topic", Random.nextInt().absoluteValue.toString(), "hihi")
+        }
     }
 }
