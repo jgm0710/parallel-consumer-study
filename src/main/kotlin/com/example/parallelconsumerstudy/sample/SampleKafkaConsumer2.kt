@@ -15,9 +15,10 @@ class SampleKafkaConsumer2 {
         topics = ["hello-topic"],
         concurrency = 10,
         ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
+        groupId = "test-group",
     )
     fun sample(recode: PollContext<String, String>) {
         log.info("recode : $recode. value : ${recode.value()}")
-        Thread.sleep(1000)
+        Thread.sleep(10000)
     }
 }

@@ -16,7 +16,7 @@ class ParallelConsumerStudyApplication(
     @Bean
     fun applicationRunner(): ApplicationRunner {
         return ApplicationRunner {
-            coreApp.run()
+//            coreApp.run()
         }
     }
 }

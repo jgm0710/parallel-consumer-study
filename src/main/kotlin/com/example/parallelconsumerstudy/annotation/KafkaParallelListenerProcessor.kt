@@ -2,12 +2,14 @@ package com.example.parallelconsumerstudy.annotation
 
 import io.confluent.parallelconsumer.ParallelStreamProcessor
 import io.confluent.parallelconsumer.PollContext
+import io.confluent.parallelconsumer.internal.DrainingCloseable
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.stereotype.Component
 import java.lang.reflect.Method
+import java.time.Duration
 
 @Component
 class KafkaParallelListenerProcessor(
@@ -67,7 +69,7 @@ class KafkaParallelListenerProcessor(
         log.info("Kafka parallel consumers closed...")
         consumers.forEach { parallelStreamProcessor: ParallelStreamProcessor<String, String> ->
             try {
-                parallelStreamProcessor.close()
+                parallelStreamProcessor.close(Duration.ofMinutes(1), DrainingCloseable.DrainingMode.DRAIN)
             } catch (e: Exception) {
                 log.error("Kafka parallel consumer close fail...", e)
             }
