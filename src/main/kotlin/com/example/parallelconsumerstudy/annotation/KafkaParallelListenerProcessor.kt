@@ -2,6 +2,7 @@ package com.example.parallelconsumerstudy.annotation
 
 import io.confluent.parallelconsumer.ParallelStreamProcessor
 import io.confluent.parallelconsumer.PollContext
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.kafka.core.ConsumerFactory
@@ -12,6 +13,8 @@ import java.lang.reflect.Method
 class KafkaParallelListenerProcessor(
     private val kafkaConsumerFactory: ConsumerFactory<String, String>,
 ) : BeanPostProcessor, DisposableBean {
+
+    private val log = LoggerFactory.getLogger(this::class.java)
 
     private val kafkaParallelConsumerFactory: KafkaParallelConsumerFactory<String, String> =
         KafkaParallelConsumerFactory()
@@ -38,7 +41,7 @@ class KafkaParallelListenerProcessor(
             kafkaConsumerFactory = kafkaConsumerFactory,
             topics = kafkaParallelListener.topics,
             ordering = kafkaParallelListener.ordering,
-            maxConcurrency = kafkaParallelListener.maxConcurrency,
+            maxConcurrency = kafkaParallelListener.concurrency,
             groupId = kafkaParallelListener.groupId,
             clientIdPrefix = kafkaParallelListener.clientIdPrefix,
             clientIdSuffix = kafkaParallelListener.clientIdSuffix,
@@ -61,6 +64,14 @@ class KafkaParallelListenerProcessor(
      * @since 2023/11/28
      * */
     override fun destroy() {
-        consumers.forEach { it.close() }
+        log.info("Kafka parallel consumers closed...")
+        consumers.forEach { parallelStreamProcessor: ParallelStreamProcessor<String, String> ->
+            try {
+                parallelStreamProcessor.close()
+            } catch (e: Exception) {
+                log.error("Kafka parallel consumer close fail...", e)
+            }
+        }
+        log.info("Kafka parallel consumers close completed...")
     }
 }

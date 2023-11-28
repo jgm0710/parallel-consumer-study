@@ -1,10 +1,10 @@
 package com.example.parallelconsumerstudy.sample
 
 import com.example.parallelconsumerstudy.annotation.KafkaParallelListener
+import io.confluent.parallelconsumer.ParallelConsumerOptions
 import io.confluent.parallelconsumer.PollContext
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import kotlin.math.log
 
 @Component
 class SampleKafkaConsumer2 {
@@ -13,6 +13,8 @@ class SampleKafkaConsumer2 {
 
     @KafkaParallelListener(
         topics = ["hello-topic"],
+        concurrency = 10,
+        ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
     )
     fun sample(recode: PollContext<String, String>) {
         log.info("recode : $recode. value : ${recode.value()}")

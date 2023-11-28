@@ -10,7 +10,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping
 annotation class KafkaParallelListener(
     val topics: Array<String>, // Kafka 토픽
     val ordering: ParallelConsumerOptions.ProcessingOrder = ParallelConsumerOptions.ProcessingOrder.KEY, // 처리 순서
-    val maxConcurrency: Int = 3, // 최대 병렬 처리 수
+    val concurrency: Int = 3, // 최대 병렬 처리 수
     val groupId: String = "", // 그룹 ID
     val clientIdPrefix: String = "", // 클라이언트 ID 접두사
     val clientIdSuffix: String = "", // 클라이언트 ID 접미사
