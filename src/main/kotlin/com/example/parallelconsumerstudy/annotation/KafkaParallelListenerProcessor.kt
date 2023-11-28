@@ -2,14 +2,12 @@ package com.example.parallelconsumerstudy.annotation
 
 import io.confluent.parallelconsumer.ParallelStreamProcessor
 import io.confluent.parallelconsumer.PollContext
-import io.confluent.parallelconsumer.internal.DrainingCloseable
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.stereotype.Component
 import java.lang.reflect.Method
-import java.time.Duration
 
 @Component
 class KafkaParallelListenerProcessor(
@@ -50,7 +48,12 @@ class KafkaParallelListenerProcessor(
         )
 
         consumerProcessor.poll { recode: PollContext<String, String> ->
-            method.invoke(bean, recode)
+            try {
+                method.invoke(bean, recode)
+            } catch (throwable: Throwable) {
+                // TODO: error handler 를 추가할 수 있도록 구현 필요
+                log.error("Kafka parallel consumer error occurred...", throwable)
+            }
         }
 
         consumers.add(consumerProcessor)
@@ -69,7 +72,8 @@ class KafkaParallelListenerProcessor(
         log.info("Kafka parallel consumers closed...")
         consumers.forEach { parallelStreamProcessor: ParallelStreamProcessor<String, String> ->
             try {
-                parallelStreamProcessor.close(Duration.ofMinutes(1), DrainingCloseable.DrainingMode.DRAIN)
+//                parallelStreamProcessor.close(Duration.ofMinutes(1), DrainingCloseable.DrainingMode.DRAIN)
+                parallelStreamProcessor.close()
             } catch (e: Exception) {
                 log.error("Kafka parallel consumer close fail...", e)
             }
