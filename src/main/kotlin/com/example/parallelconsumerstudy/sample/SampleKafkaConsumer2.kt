@@ -16,5 +16,6 @@ class SampleKafkaConsumer2 {
     )
     fun sample(recode: PollContext<String, String>) {
         log.info("recode : $recode. value : ${recode.value()}")
+        Thread.sleep(1000)
     }
 }

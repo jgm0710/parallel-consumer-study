@@ -12,7 +12,7 @@ class KafkaParallelConsumerFactory<K, V> {
         topics: Array<String>,
         ordering: ParallelConsumerOptions.ProcessingOrder = ParallelConsumerOptions.ProcessingOrder.KEY,
         maxConcurrency: Int = 3,
-        groupId: String? = null,
+        groupId: String,
         clientIdPrefix: String? = null,
         clientIdSuffix: String? = null,
         properties: Properties? = null,
@@ -22,7 +22,7 @@ class KafkaParallelConsumerFactory<K, V> {
             .maxConcurrency(maxConcurrency)
             .consumer(
                 kafkaConsumerFactory.createConsumer(
-                    groupId,
+                    groupId.ifEmpty { null },
                     clientIdPrefix,
                     clientIdSuffix,
                 ),
