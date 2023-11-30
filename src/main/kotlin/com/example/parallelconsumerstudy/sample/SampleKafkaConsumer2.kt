@@ -7,6 +7,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
+import kotlin.math.absoluteValue
+import kotlin.random.Random
 
 @Component
 class SampleKafkaConsumer2 {
@@ -30,7 +32,7 @@ class SampleKafkaConsumer2 {
     }
 
     @KafkaParallelListener(
-        topics = ["parallel-consumer-topic"],
+        topics = ["parallel-consumer-topic1"],
         concurrency = 1000,
         ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
         groupId = "test-group",
@@ -40,7 +42,7 @@ class SampleKafkaConsumer2 {
     }
 
     @KafkaParallelListener(
-        topics = ["parallel-consumer-topic"],
+        topics = ["parallel-consumer-topic1"],
         concurrency = 1000,
         ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
         groupId = "test-group2",
@@ -62,9 +64,9 @@ class SampleKafkaConsumer2 {
         //        val threadSleepS = (10 - l) * 2
         val threadSleepS = 1L
 
-        //        if (Random.nextInt().absoluteValue % 3 == 0) {
-        //            throw Exception("test exception")
-        //        }
+        if (Random.nextInt().absoluteValue % 3 == 0) {
+            throw Exception("test exception")
+        }
 
         log.info("Thread Sleep [$threadSleepS] s")
 

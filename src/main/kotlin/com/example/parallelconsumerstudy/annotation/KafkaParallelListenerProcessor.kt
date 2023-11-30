@@ -7,6 +7,7 @@ import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.stereotype.Component
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
 @Component
@@ -50,6 +51,9 @@ class KafkaParallelListenerProcessor(
         consumerProcessor.poll { recode: PollContext<String, String> ->
             try {
                 method.invoke(bean, recode)
+            } catch (e: InvocationTargetException) {
+                val targetException = e.targetException
+                log.error("invocation target exception.", targetException)
             } catch (throwable: Throwable) {
                 // TODO: error handler 를 추가할 수 있도록 구현 필요
                 log.error("Kafka parallel consumer error occurred...", throwable)
