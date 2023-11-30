@@ -1,9 +1,10 @@
 package com.example.parallelconsumerstudy.sample
 
 import org.slf4j.LoggerFactory
+import org.springframework.http.MediaType
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import kotlin.math.absoluteValue
 import kotlin.random.Random
@@ -17,10 +18,12 @@ class SampleKafkaMessageSendController(
 
     @PostMapping("/kafka/domain-events/publish")
     fun publishKafkaEvents(
-        @RequestPart("publishCount") publishCount: Int,
-        @RequestPart("topic") topic: String,
-        @RequestPart("message") message: String,
+        @RequestBody request: SendKafkaMessageRequest,
     ) {
+        val topic = request.topic
+        val message = request.message
+        val publishCount = request.publishCount
+
         log.info(
             "Send kafka domain events. topic : [{}], message : [{}], publishCount : [{}]",
             topic,
@@ -39,3 +42,9 @@ class SampleKafkaMessageSendController(
         log.info("End publish domain events. processed time : [{}]ms", endTime - startTime)
     }
 }
+
+data class SendKafkaMessageRequest(
+    val publishCount: Int,
+    val topic: String,
+    val message: String,
+)
