@@ -52,8 +52,9 @@ class KafkaParallelListenerProcessor(
             try {
                 method.invoke(bean, recode)
             } catch (e: InvocationTargetException) {
-                val targetException = e.targetException
-                log.error("invocation target exception.", targetException)
+                // TODO: error handler 를 추가할 수 있도록 구현 필요
+                val originalThrowable: Throwable = e.targetException
+                log.error("Kafka parallel consumer error occurred...", originalThrowable)
             } catch (throwable: Throwable) {
                 // TODO: error handler 를 추가할 수 있도록 구현 필요
                 log.error("Kafka parallel consumer error occurred...", throwable)

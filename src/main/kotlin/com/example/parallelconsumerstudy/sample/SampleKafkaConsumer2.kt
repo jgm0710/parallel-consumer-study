@@ -42,7 +42,7 @@ class SampleKafkaConsumer2 {
     }
 
     @KafkaParallelListener(
-        topics = ["parallel-consumer-topic1"],
+        topics = ["parallel-consumer-topic2"],
         concurrency = 1000,
         ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
         groupId = "test-group2",
