@@ -64,9 +64,9 @@ class SampleKafkaConsumer2 {
         //        val threadSleepS = (10 - l) * 2
         val threadSleepS = 1L
 
-        if (Random.nextInt().absoluteValue % 3 == 0) {
-            throw Exception("test exception")
-        }
+//        if (Random.nextInt().absoluteValue % 3 == 0) {
+//            throw Exception("test exception")
+//        }
 
         log.info("Thread Sleep [$threadSleepS] s")
 
