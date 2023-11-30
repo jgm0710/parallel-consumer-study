@@ -5,6 +5,7 @@ import io.confluent.parallelconsumer.ParallelConsumerOptions
 import io.confluent.parallelconsumer.PollContext
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
+import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
 @Component
@@ -12,7 +13,7 @@ class SampleKafkaConsumer2 {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    //    @KafkaListener(topics = ["hello-topic"], groupId = "sample2")
+    @KafkaListener(topics = ["normal-topic"], groupId = "sample2")
     fun normalKafkaConsumer(consumerRecord: ConsumerRecord<String, String>) {
         val offset = consumerRecord.offset()
         val key = consumerRecord.key()
@@ -29,7 +30,7 @@ class SampleKafkaConsumer2 {
     }
 
     @KafkaParallelListener(
-        topics = ["hello-topic"],
+        topics = ["parallel-consumer-topic"],
         concurrency = 1000,
         ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
         groupId = "test-group",
@@ -39,7 +40,7 @@ class SampleKafkaConsumer2 {
     }
 
     @KafkaParallelListener(
-        topics = ["hello-topic"],
+        topics = ["parallel-consumer-topic"],
         concurrency = 1000,
         ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
         groupId = "test-group2",
