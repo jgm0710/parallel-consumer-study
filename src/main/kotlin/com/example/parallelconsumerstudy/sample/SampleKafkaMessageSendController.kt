@@ -1,7 +1,6 @@
 package com.example.parallelconsumerstudy.sample
 
 import org.slf4j.LoggerFactory
-import org.springframework.http.MediaType
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -23,6 +22,7 @@ class SampleKafkaMessageSendController(
         val topic = request.topic
         val message = request.message
         val publishCount = request.publishCount
+        val key = request.key
 
         log.info(
             "Send kafka domain events. topic : [{}], message : [{}], publishCount : [{}]",
@@ -34,7 +34,7 @@ class SampleKafkaMessageSendController(
         val startTime = System.currentTimeMillis()
 
         repeat(publishCount) {
-            kafkaTemplate.send(topic, Random.nextInt().absoluteValue.toString(), message)
+            kafkaTemplate.send(topic, key ?: Random.nextInt().absoluteValue.toString(), message)
         }
 
         val endTime = System.currentTimeMillis()
@@ -47,4 +47,5 @@ data class SendKafkaMessageRequest(
     val publishCount: Int,
     val topic: String,
     val message: String,
+    val key: String?,
 )
