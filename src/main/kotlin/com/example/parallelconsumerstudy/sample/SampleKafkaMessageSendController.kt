@@ -1,8 +1,9 @@
 package com.example.parallelconsumerstudy.sample
 
+import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import kotlin.math.absoluteValue
 import kotlin.random.Random
@@ -12,10 +13,29 @@ class SampleKafkaMessageSendController(
     private val kafkaTemplate: KafkaTemplate<String, String>,
 ) {
 
-    @GetMapping("/sample")
-    fun sample(@RequestParam(defaultValue = "1") publishCount: Int) {
+    private val log = LoggerFactory.getLogger(this::class.java)
+
+    @PostMapping("/kafka/domain-events/publish")
+    fun publishKafkaEvents(
+        @RequestPart("publishCount") publishCount: Int,
+        @RequestPart("topic") topic: String,
+        @RequestPart("message") message: String,
+    ) {
+        log.info(
+            "Send kafka domain events. topic : [{}], message : [{}], publishCount : [{}]",
+            topic,
+            message,
+            publishCount,
+        )
+
+        val startTime = System.currentTimeMillis()
+
         repeat(publishCount) {
-            kafkaTemplate.send("hello-topic", Random.nextInt().absoluteValue.toString(), "hihi")
+            kafkaTemplate.send(topic, Random.nextInt().absoluteValue.toString(), message)
         }
+
+        val endTime = System.currentTimeMillis()
+
+        log.info("End publish domain events. processed time : [{}]ms", endTime - startTime)
     }
 }
