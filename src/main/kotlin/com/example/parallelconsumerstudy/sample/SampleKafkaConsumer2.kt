@@ -1,14 +1,12 @@
 package com.example.parallelconsumerstudy.sample
 
-import com.example.parallelconsumerstudy.annotation.KafkaParallelListener
+import com.example.parallelconsumerstudy.parallelconsumer.KafkaParallelListener
 import io.confluent.parallelconsumer.ParallelConsumerOptions
 import io.confluent.parallelconsumer.PollContext
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
-import kotlin.math.absoluteValue
-import kotlin.random.Random
 
 @Component
 class SampleKafkaConsumer2 {

@@ -1,4 +1,4 @@
-package com.example.parallelconsumerstudy.annotation
+package com.example.parallelconsumerstudy.parallelconsumer
 
 import io.confluent.parallelconsumer.ParallelConsumerOptions
 import io.confluent.parallelconsumer.ParallelStreamProcessor

@@ -1,4 +1,4 @@
-package com.example.parallelconsumerstudy.annotation
+package com.example.parallelconsumerstudy.parallelconsumer
 
 import io.confluent.parallelconsumer.ParallelStreamProcessor
 import io.confluent.parallelconsumer.PollContext
@@ -23,7 +23,6 @@ class KafkaParallelListenerProcessor(
     private val consumers = mutableListOf<ParallelStreamProcessor<String, String>>()
 
     override fun postProcessAfterInitialization(bean: Any, beanName: String): Any? {
-        // bean의 모든 메서드를 순회하면서 KafkaParallelListener 애너테이션을 찾습니다.
         bean.javaClass.methods.forEach { method: Method ->
             method.getAnnotation(KafkaParallelListener::class.java)?.let { annotation ->
                 processKafkaParallelListenerMethod(bean, method, annotation)
@@ -37,7 +36,6 @@ class KafkaParallelListenerProcessor(
         method: Method,
         kafkaParallelListener: KafkaParallelListener,
     ) {
-        // KafkaParallelConsumerFactory를 사용하여 컨슈머 프로세서를 생성하고, poll 메서드에 메서드를 연결합니다.
         val consumerProcessor = kafkaParallelConsumerFactory.createConsumerProcessor(
             kafkaConsumerFactory = kafkaConsumerFactory,
             topics = kafkaParallelListener.topics,
@@ -62,7 +60,6 @@ class KafkaParallelListenerProcessor(
         }
 
         consumers.add(consumerProcessor)
-        // 이 부분은 구체적인 로직에 따라 달라질 수 있습니다.
     }
 
     /**
@@ -77,7 +74,6 @@ class KafkaParallelListenerProcessor(
         log.info("Kafka parallel consumers closed...")
         consumers.forEach { parallelStreamProcessor: ParallelStreamProcessor<String, String> ->
             try {
-//                parallelStreamProcessor.close(Duration.ofMinutes(1), DrainingCloseable.DrainingMode.DRAIN)
                 parallelStreamProcessor.close()
             } catch (e: Exception) {
                 log.error("Kafka parallel consumer close fail...", e)
