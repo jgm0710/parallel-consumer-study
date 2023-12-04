@@ -3,7 +3,6 @@ package com.example.parallelconsumerstudy.parallelconsumer
 import io.confluent.parallelconsumer.ParallelConsumerOptions
 import io.confluent.parallelconsumer.ParallelStreamProcessor
 import org.springframework.kafka.core.ConsumerFactory
-import java.util.Properties
 
 class KafkaParallelConsumerFactory<K, V> {
 
@@ -15,9 +14,8 @@ class KafkaParallelConsumerFactory<K, V> {
         groupId: String,
         clientIdPrefix: String? = null,
         clientIdSuffix: String? = null,
-        properties: Properties? = null,
     ): ParallelStreamProcessor<K, V> {
-        val options = ParallelConsumerOptions.builder<K, V>()
+        val options: ParallelConsumerOptions<K, V> = ParallelConsumerOptions.builder<K, V>()
             .ordering(ordering)
             .maxConcurrency(maxConcurrency)
             .consumer(
@@ -29,7 +27,8 @@ class KafkaParallelConsumerFactory<K, V> {
             )
             .build()
 
-        val eosStreamProcessor = ParallelStreamProcessor.createEosStreamProcessor(options)
+        val eosStreamProcessor: ParallelStreamProcessor<K, V> =
+            ParallelStreamProcessor.createEosStreamProcessor(options)
 
         eosStreamProcessor.subscribe(topics.toList())
 
