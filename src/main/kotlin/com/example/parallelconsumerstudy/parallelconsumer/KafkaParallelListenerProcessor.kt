@@ -68,7 +68,7 @@ class KafkaParallelListenerProcessor(
     }
 
     private fun convertToParallelConsumerProcessingOrder(ordering: ProcessingOrder): ParallelConsumerOptions.ProcessingOrder {
-        val parallelConsumerProcessingOrder = when (ordering) {
+        val parallelConsumerProcessingOrder: ParallelConsumerOptions.ProcessingOrder = when (ordering) {
             ProcessingOrder.KEY -> ParallelConsumerOptions.ProcessingOrder.KEY
             ProcessingOrder.PARTITION -> ParallelConsumerOptions.ProcessingOrder.PARTITION
             ProcessingOrder.UNORDERED -> ParallelConsumerOptions.ProcessingOrder.UNORDERED
