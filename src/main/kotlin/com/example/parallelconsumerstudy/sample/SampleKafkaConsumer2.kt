@@ -1,7 +1,7 @@
 package com.example.parallelconsumerstudy.sample
 
 import com.example.parallelconsumerstudy.parallelconsumer.KafkaParallelListener
-import io.confluent.parallelconsumer.ParallelConsumerOptions
+import com.example.parallelconsumerstudy.parallelconsumer.ProcessingOrder
 import io.confluent.parallelconsumer.PollContext
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
@@ -32,7 +32,7 @@ class SampleKafkaConsumer2 {
     @KafkaParallelListener(
         topics = ["parallel-consumer-topic1"],
         concurrency = 1000,
-        ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
+        ordering = ProcessingOrder.KEY,
         groupId = "test-group",
     )
     fun sample(recode: PollContext<String, String>) {
@@ -42,7 +42,7 @@ class SampleKafkaConsumer2 {
     @KafkaParallelListener(
         topics = ["parallel-consumer-topic2"],
         concurrency = 1000,
-        ordering = ParallelConsumerOptions.ProcessingOrder.KEY,
+        ordering = ProcessingOrder.KEY,
         groupId = "test-group2",
     )
     fun sample2(recode: PollContext<String, String>) {
