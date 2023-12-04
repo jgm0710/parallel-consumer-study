@@ -12,8 +12,8 @@ class KafkaParallelConsumerFactory<K, V> {
         ordering: ParallelConsumerOptions.ProcessingOrder = ParallelConsumerOptions.ProcessingOrder.KEY,
         maxConcurrency: Int = 3,
         groupId: String,
-        clientIdPrefix: String? = null,
-        clientIdSuffix: String? = null,
+        clientIdPrefix: String,
+        clientIdSuffix: String,
     ): ParallelStreamProcessor<K, V> {
         val options: ParallelConsumerOptions<K, V> = ParallelConsumerOptions.builder<K, V>()
             .ordering(ordering)

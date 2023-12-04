@@ -36,15 +36,16 @@ class KafkaParallelListenerProcessor(
         method: Method,
         kafkaParallelListener: KafkaParallelListener,
     ) {
-        val consumerProcessor = kafkaParallelConsumerFactory.createConsumerProcessor(
-            kafkaConsumerFactory = kafkaConsumerFactory,
-            topics = kafkaParallelListener.topics,
-            ordering = kafkaParallelListener.ordering,
-            maxConcurrency = kafkaParallelListener.concurrency,
-            groupId = kafkaParallelListener.groupId,
-            clientIdPrefix = kafkaParallelListener.clientIdPrefix,
-            clientIdSuffix = kafkaParallelListener.clientIdSuffix,
-        )
+        val consumerProcessor: ParallelStreamProcessor<String, String> =
+            kafkaParallelConsumerFactory.createConsumerProcessor(
+                kafkaConsumerFactory = kafkaConsumerFactory,
+                topics = kafkaParallelListener.topics,
+                ordering = kafkaParallelListener.ordering,
+                maxConcurrency = kafkaParallelListener.concurrency,
+                groupId = kafkaParallelListener.groupId,
+                clientIdPrefix = kafkaParallelListener.clientIdPrefix,
+                clientIdSuffix = kafkaParallelListener.clientIdSuffix,
+            )
 
         consumerProcessor.poll { recode: PollContext<String, String> ->
             try {
