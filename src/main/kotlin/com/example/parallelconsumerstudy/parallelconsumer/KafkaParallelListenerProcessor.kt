@@ -25,7 +25,7 @@ class KafkaParallelListenerProcessor(
 
     override fun postProcessAfterInitialization(bean: Any, beanName: String): Any? {
         bean.javaClass.methods.forEach { method: Method ->
-            method.getAnnotation(KafkaParallelListener::class.java)?.let { annotation ->
+            method.getAnnotation(KafkaParallelListener::class.java)?.let { annotation: KafkaParallelListener ->
                 processKafkaParallelListenerMethod(bean, method, annotation)
             }
         }
