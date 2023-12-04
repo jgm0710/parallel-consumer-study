@@ -1,5 +1,6 @@
 package com.example.parallelconsumerstudy.parallelconsumer
 
+import io.confluent.parallelconsumer.ParallelConsumerOptions
 import io.confluent.parallelconsumer.ParallelStreamProcessor
 import io.confluent.parallelconsumer.PollContext
 import org.slf4j.LoggerFactory
@@ -36,15 +37,18 @@ class KafkaParallelListenerProcessor(
         method: Method,
         kafkaParallelListener: KafkaParallelListener,
     ) {
+        val parallelConsumerProcessingOrder: ParallelConsumerOptions.ProcessingOrder =
+            convertToParallelConsumerProcessingOrder(kafkaParallelListener.ordering)
+
         val consumerProcessor: ParallelStreamProcessor<String, String> =
             kafkaParallelConsumerFactory.createConsumerProcessor(
                 kafkaConsumerFactory = kafkaConsumerFactory,
                 topics = kafkaParallelListener.topics,
-                ordering = kafkaParallelListener.ordering,
+                ordering = parallelConsumerProcessingOrder,
                 maxConcurrency = kafkaParallelListener.concurrency,
                 groupId = kafkaParallelListener.groupId,
                 clientIdPrefix = kafkaParallelListener.clientIdPrefix,
-                clientIdSuffix = kafkaParallelListener.clientIdSuffix,
+                clientIdSuffix = "",
             )
 
         consumerProcessor.poll { recode: PollContext<String, String> ->
@@ -61,6 +65,15 @@ class KafkaParallelListenerProcessor(
         }
 
         consumers.add(consumerProcessor)
+    }
+
+    private fun convertToParallelConsumerProcessingOrder(ordering: ProcessingOrder): ParallelConsumerOptions.ProcessingOrder {
+        val parallelConsumerProcessingOrder = when (ordering) {
+            ProcessingOrder.KEY -> ParallelConsumerOptions.ProcessingOrder.KEY
+            ProcessingOrder.PARTITION -> ParallelConsumerOptions.ProcessingOrder.PARTITION
+            ProcessingOrder.UNORDERED -> ParallelConsumerOptions.ProcessingOrder.UNORDERED
+        }
+        return parallelConsumerProcessingOrder
     }
 
     /**
